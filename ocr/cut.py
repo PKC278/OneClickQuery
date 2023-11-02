@@ -21,6 +21,9 @@ class Screenshot(QWidget):
         super().__init__()
         self.initWindow()  # 初始化窗口
         self.captureFullScreen()  # 捕获全屏
+        self.activateWindow()  # 激活窗口
+        self.raise_()  # 将窗口提升到前台
+        self.setFocus()  # 设置焦点
 
     def initWindow(self):
         self.setCursor(Qt.CrossCursor)  # 设置光标

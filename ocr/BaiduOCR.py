@@ -30,7 +30,6 @@ class BaiduOCR:
 
         # 将所有words值放在一个字符串中
         words_str = " ".join(words_list)
-
         return words_str
 
     def get_file_content_as_base64(path, urlencoded=True):
