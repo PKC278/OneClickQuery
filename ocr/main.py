@@ -13,6 +13,7 @@ import requests
 import subprocess
 import shutil
 from bs4 import BeautifulSoup
+import psutil
 
 event = threading.Event()
 user_path = os.path.expanduser("~")
@@ -42,6 +43,20 @@ def click_menu(icon, item):
 
 
 def on_exit(icon):
+    try:
+        ditto_processes = []
+        for process in psutil.process_iter():
+            try:
+                proc_info = process.as_dict(attrs=["pid", "name"])
+                if proc_info["name"].lower() == "ditto.exe":
+                    ditto_processes.append(proc_info)
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass
+        processes = ditto_processes
+        for proc in processes:
+            psutil.Process(proc["pid"]).terminate()
+    except:
+        pass
     icon.stop()
 
 
@@ -137,11 +152,15 @@ def tiku(result):
     for div in list_div:
         title = f"题目{i}：" + div.findAll("span", class_="text_4")[0].text
         answer = div.find("div", class_="text_8").text.replace(" ", "")
-        option = div.findAll("span", class_="text_4")[1].text.replace(" ", "")
+        option = (
+            div.findAll("span", class_="text_4")[1]
+            .text.replace(" ", "")
+            .replace("　", "")
+        )
         lines = option.strip().split("\n")
         for line in lines:
             if line.startswith("D"):
-                answer = "答案：" + line
+                answer = "答案：" + line.replace(" ", "").replace("　", "")
         display_text += (
             title + "\n" + answer + "\n" + option + "\n" + "------------------" + "\n"
         )
