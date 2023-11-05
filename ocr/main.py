@@ -159,7 +159,7 @@ def tiku(result):
         )
         lines = option.strip().split("\n")
         for line in lines:
-            if line.startswith("D"):
+            if line.startswith(answer):
                 answer = "答案：" + line.replace(" ", "").replace("　", "")
         display_text += (
             title + "\n" + answer + "\n" + option + "\n" + "------------------" + "\n"
