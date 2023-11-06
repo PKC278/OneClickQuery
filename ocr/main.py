@@ -157,12 +157,16 @@ def tiku(result):
             .text.replace(" ", "")
             .replace("　", "")
         )
-        lines = option.strip().split("\n")
-        for line in lines:
-            if line.startswith(answer):
-                answer = "答案：" + line.replace(" ", "").replace("　", "")
         display_text += (
-            title + "\n" + answer + "\n" + option + "\n" + "------------------" + "\n"
+            title
+            + "\n"
+            + option
+            + "\n"
+            + "答案："
+            + answer
+            + "\n"
+            + "------------------"
+            + "\n"
         )
         i += 1
     return display_text
