@@ -2,7 +2,6 @@ from BaiduOCR import BaiduOCR
 from cut import Screenshot
 import pyperclip
 import os
-import json
 from pystray import MenuItem
 from PIL import Image
 import pystray
@@ -12,7 +11,6 @@ import sys
 import requests
 import subprocess
 import shutil
-from bs4 import BeautifulSoup
 import psutil
 
 event = threading.Event()
@@ -127,48 +125,13 @@ def chat(user_msg):
 
 
 def tiku(result):
-    tk_token = ""
-    version = "2.0.3"
-    question = result
-
-    url = "https://app.itihey.com/pcService/api/queryAnswer"
-    headers = {
-        "Content-Type": "application/json;charset=utf-8",
-        "access-token": tk_token,
-        "Version": version,
-    }
-    data = {
-        "word": question,
-        "location": "https://baidu.com",
-    }
-    response = requests.post(url, headers=headers, data=json.dumps(data)).text
-    soup = BeautifulSoup(response, "html.parser")
-    page = soup.findAll("div", class_="page")[1]
-    # 获取所有的div标签
-    list_div = page.findAll("div", class_="list-item")
-    # 遍历div标签
-    i = 1
-    display_text = ""
-    for div in list_div:
-        title = f"题目{i}：" + div.findAll("span", class_="text_4")[0].text
-        answer = div.find("div", class_="text_8").text.replace(" ", "")
-        option = (
-            div.findAll("span", class_="text_4")[1]
-            .text.replace(" ", "")
-            .replace("　", "")
-        )
-        display_text += (
-            title
-            + "\n"
-            + option
-            + "\n"
-            + "答案："
-            + answer
-            + "\n"
-            + "------------------"
-            + "\n"
-        )
-        i += 1
+    url = "http://lyck6.cn/scriptService/api/autoFreeAnswer"
+    data = {"question": result}
+    response = requests.post(url, json=data).json()["result"]["answers"]
+    answers = ""
+    for i in response:
+        answers += f"{i[0]}\n"
+    display_text = f"{result}\n答案：{answers}"
     return display_text
 
 
