@@ -12,6 +12,7 @@ import requests
 import subprocess
 import shutil
 import psutil
+from collections import Counter
 
 event = threading.Event()
 user_path = os.path.expanduser("~")
@@ -124,15 +125,33 @@ def chat(user_msg):
     return content
 
 
+def most_common_answer(answers):
+    flat_answers = sum(answers, [])
+    # 计算每个答案出现的次数
+    answer_counts = Counter(flat_answers)
+    # 找出出现次数最多的答案
+    most_common = answer_counts.most_common(1)
+    if most_common:
+        # 返回出现次数最多的答案（及其出现次数）
+        return most_common[0][0]
+    else:
+        # 如果没有答案，返回 None
+        return None
+
+
 def tiku(result):
+    question = result
     tk_token = ""
     url = f"http://lyck6.cn/scriptService/api/autoAnswer/{tk_token}"
-    data = {"question": result}
-    response = requests.post(url, json=data).json()["result"]["answers"]
-    answers = ""
-    for i in response:
-        answers += f"{i[0]}\n"
-    display_text = f"{result}\n答案：{answers}"
+    data = {"question": question}
+    try:
+        response = requests.post(url, json=data).json()["result"]["answers"]
+        answers = ""
+        for i in response:
+            answers += f"{i[0]}\n"
+        display_text = f"{question}\n答案：{most_common_answer(response)}\n其他答案：{answers}"
+    except:
+        display_text = "程序错误，请重试"
     return display_text
 
 
