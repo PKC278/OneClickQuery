@@ -125,7 +125,8 @@ def chat(user_msg):
 
 
 def tiku(result):
-    url = "http://lyck6.cn/scriptService/api/autoFreeAnswer"
+    tk_token = ""
+    url = f"http://lyck6.cn/scriptService/api/autoAnswer/{tk_token}"
     data = {"question": result}
     response = requests.post(url, json=data).json()["result"]["answers"]
     answers = ""
