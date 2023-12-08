@@ -10,42 +10,42 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
 
-    - name: Install UPX
-      uses: crazy-max/ghaction-upx@v3
-      with:
-        install-only: true
+      - name: Install UPX
+        uses: crazy-max/ghaction-upx@v3
+        with:
+          install-only: true
 
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller requests typer click rich distro pyreadline3 pyautogui pystray keyboard PyQt5 pyperclip tqdm bs4 psutil
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller requests typer click rich distro pyreadline3 pyautogui pystray keyboard PyQt5 pyperclip tqdm psutil
 
-    - name: Secret Parser
-      run: python Secret_Parser.py
-      env:
-        API_KEY: ${{ secrets.API_KEY }}
-        BAIDUOCR_API_KEY: ${{ secrets.BAIDUOCR_API_KEY }}
-        BAIDUOCR_SECRET_KEY: ${{ secrets.BAIDUOCR_SECRET_KEY }}
-        TK_TOKEN: ${{ secrets.TK_TOKEN }}
+      - name: Secret Parser
+        run: python Secret_Parser.py
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          BAIDUOCR_API_KEY: ${{ secrets.BAIDUOCR_API_KEY }}
+          BAIDUOCR_SECRET_KEY: ${{ secrets.BAIDUOCR_SECRET_KEY }}
+          TK_TOKEN: ${{ secrets.TK_TOKEN }}
 
-    - name: Get current date
-      run: |
-        $time = Get-Date -Format 'yyyyMMddHHmm'
-        echo "time=$time" >> $env:GITHUB_ENV
-    
-    - name: Build OneClickQuery
-      run: pyinstaller --onefile --add-data "OneClickQuery.ico;." --add-data "active.ico;." --add-data "Ditto;Ditto" --noconsole --name "OneClickQuery-${{ env.time }}" -i OneClickQuery.ico ocr/main.py -p c:\hostedtoolcache\windows\python\3.8.10\x64\lib\site-packages
+      - name: Get current date
+        run: |
+          $time = Get-Date -Format 'yyyyMMddHHmm'
+          echo "time=$time" >> $env:GITHUB_ENV
 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: OneClickQuery-${{ env.time }}
-        path: ./dist
+      - name: Build OneClickQuery
+        run: pyinstaller --onefile --add-data "OneClickQuery.ico;." --add-data "active.ico;." --add-data "Ditto;Ditto" --noconsole --name "OneClickQuery-${{ env.time }}" -i OneClickQuery.ico ocr/main.py -p c:\hostedtoolcache\windows\python\3.8.10\x64\lib\site-packages
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: OneClickQuery-${{ env.time }}
+          path: ./dist
