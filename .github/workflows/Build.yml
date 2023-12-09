@@ -26,7 +26,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyinstaller requests typer click rich distro pyreadline3 pyautogui pystray keyboard PyQt5 pyperclip tqdm psutil
+          pip install -r requirements.txt
 
       - name: Secret Parser
         run: python Secret_Parser.py
@@ -36,16 +36,11 @@ jobs:
           BAIDUOCR_SECRET_KEY: ${{ secrets.BAIDUOCR_SECRET_KEY }}
           TK_TOKEN: ${{ secrets.TK_TOKEN }}
 
-      - name: Get current date
-        run: |
-          $time = Get-Date -Format 'yyyyMMddHHmm'
-          echo "time=$time" >> $env:GITHUB_ENV
-
       - name: Build OneClickQuery
-        run: pyinstaller --onefile --add-data "OneClickQuery.ico;." --add-data "active.ico;." --add-data "Ditto;Ditto" --noconsole --name "OneClickQuery-${{ env.time }}" -i OneClickQuery.ico ocr/main.py -p c:\hostedtoolcache\windows\python\3.8.10\x64\lib\site-packages
+        run: pyinstaller --onefile --add-data "OneClickQuery.ico;." --add-data "active.ico;." --add-data "Ditto;Ditto" --noconsole --name "OneClickQuery" -i OneClickQuery.ico ocr/main.py -p c:\hostedtoolcache\windows\python\3.8.10\x64\lib\site-packages
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: OneClickQuery-${{ env.time }}
+          name: OneClickQuery
           path: ./dist

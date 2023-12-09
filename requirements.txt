@@ -1,0 +1,7 @@
+pyinstaller
+requests
+PyQt5
+pyperclip
+pystray
+keyboard
+psutil
