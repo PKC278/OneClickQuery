@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.8"
 
@@ -37,7 +37,9 @@ jobs:
           TK_TOKEN: ${{ secrets.TK_TOKEN }}
 
       - name: Build OneClickQuery
-        run: pyinstaller --onefile --add-data "OneClickQuery.ico;." --add-data "active.ico;." --add-data "Ditto;Ditto" --noconsole --name "OneClickQuery" -i OneClickQuery.ico ocr/main.py -p c:\hostedtoolcache\windows\python\3.8.10\x64\lib\site-packages
+        run: |
+          $Env:SITE_PACKAGES_PATH = python -c "import site; print(site.getsitepackages()[0])"
+          pyinstaller --onefile --add-data "OneClickQuery.ico;." --add-data "active.ico;." --add-data "Ditto;Ditto" --noconsole --name "OneClickQuery" -i OneClickQuery.ico ocr/main.py -p $Env:SITE_PACKAGES_PATH
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3
