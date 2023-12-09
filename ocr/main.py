@@ -10,27 +10,23 @@ import keyboard
 import sys
 import requests
 import subprocess
-import shutil
 import psutil
 from collections import Counter
 
 event = threading.Event()
 user_path = os.path.expanduser("~")
-OneClickQuery_path = os.path.join(user_path, "OneClickQuery")
 searchEngine = "题库"
+if getattr(sys, "frozen", False):
+    # 如果是可执行文件，则获取可执行文件所在的目录
+    base_dir = sys._MEIPASS
+else:
+    # 如果是脚本文件，则获取脚本文件所在的目录
+    base_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 def click_menu(icon, item):
     if item == menu[0]:
-        if getattr(sys, "frozen", False):
-            # 如果是可执行文件，则获取可执行文件所在的目录
-            base_dir = sys._MEIPASS
-        else:
-            # 如果是脚本文件，则获取脚本文件所在的目录
-            base_dir = os.path.abspath(os.path.dirname(__file__))
-        image = Image.open(f"{base_dir}\\OneClickQuery.ico")
-        icon.icon = image
-        main()
+        main(icon)
     elif item == menu[1]:
         global searchEngine
         if searchEngine == "题库":
@@ -59,7 +55,9 @@ def on_exit(icon):
     icon.stop()
 
 
-def main():
+def main(icon):
+    image = Image.open(f"{base_dir}\\OneClickQuery.ico")
+    icon.icon = image
     Screenshot.main()
     temp_var = os.environ.get("TEMP")
     try:
@@ -67,14 +65,11 @@ def main():
     except FileNotFoundError:
         return
     os.remove(f"{temp_var}\\Screenshot.png")
-    result = BaiduOCR.main(img)
+    try:
+        result = BaiduOCR.main(img)
+    except:
+        return
     print(result)
-    if getattr(sys, "frozen", False):
-        # 如果是可执行文件，则获取可执行文件所在的目录
-        base_dir = sys._MEIPASS
-    else:
-        # 如果是脚本文件，则获取脚本文件所在的目录
-        base_dir = os.path.abspath(os.path.dirname(__file__))
     try:
         if searchEngine == "题库":
             result = tiku(result)
@@ -95,15 +90,7 @@ def main():
 def shot(event):
     while not event.is_set():
         if keyboard.is_pressed("ctrl+q"):
-            if getattr(sys, "frozen", False):
-                # 如果是可执行文件，则获取可执行文件所在的目录
-                base_dir = sys._MEIPASS
-            else:
-                # 如果是脚本文件，则获取脚本文件所在的目录
-                base_dir = os.path.abspath(os.path.dirname(__file__))
-            image = Image.open(f"{base_dir}\\OneClickQuery.ico")
-            icon.icon = image
-            main()
+            main(icon)
 
 
 def tary(event):
@@ -132,7 +119,7 @@ def most_common_answer(answers):
     # 找出出现次数最多的答案
     most_common = answer_counts.most_common(1)
     if most_common:
-        # 返回出现次数最多的答案（及其出现次数）
+        # 返回出现次数最多的答案
         return most_common[0][0]
     else:
         # 如果没有答案，返回 None
@@ -160,19 +147,10 @@ menu = (
     MenuItem(text="切换搜索源", action=click_menu, default=False, visible=True),
     MenuItem(text="退出", action=on_exit),
 )
-if getattr(sys, "frozen", False):
-    # 如果是可执行文件，则获取可执行文件所在的目录
-    base_dir = sys._MEIPASS
-else:
-    # 如果是脚本文件，则获取脚本文件所在的目录
-    base_dir = os.path.abspath(os.path.dirname(__file__))
 
-if not os.path.exists(OneClickQuery_path):
-    os.makedirs(OneClickQuery_path)
-    shutil.copytree(f"{base_dir}\\Ditto", f"{OneClickQuery_path}/Ditto")
 image = Image.open(f"{base_dir}\\OneClickQuery.ico")
 icon = pystray.Icon("name", image, "OneClickQuery", menu)
-subprocess.Popen([f"{OneClickQuery_path}/Ditto/Ditto.exe"])
+subprocess.Popen([f"{base_dir}\\Ditto\\Ditto.exe"])
 print(f"当前搜索源为{searchEngine}")
 
 t1 = threading.Thread(target=shot, args=(event,))
