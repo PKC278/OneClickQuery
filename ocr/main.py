@@ -114,9 +114,16 @@ def chat(user_msg):
 
 def most_common_answer(answers):
     flat_answers = sum(answers, [])
+    # 计算每个答案出现的次数
     answer_counts = Counter(flat_answers)
-    most_common = answer_counts.most_common(2)
-    return most_common[0][0], most_common[1][0] if len(most_common) > 1 else None
+    # 找出出现次数最多的答案
+    most_common = answer_counts.most_common(1)
+    if most_common:
+        # 返回出现次数最多的答案
+        return most_common[0][0]
+    else:
+        # 如果没有答案，返回 None
+        return None
 
 
 def tiku(result):
@@ -129,8 +136,7 @@ def tiku(result):
         answers = ""
         for i in response:
             answers += f"{i[0]}\n"
-        common_answer = most_common_answer(response)
-        display_text = f"{common_answer[0]}\n{common_answer[1]}\n{answers}"
+        display_text = f"{question}\n答案：{most_common_answer(response)}\n--------------------\n其他答案：{answers}"
     except:
         display_text = "程序错误，请重试"
     return display_text
