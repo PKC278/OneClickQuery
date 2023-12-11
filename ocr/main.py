@@ -137,13 +137,13 @@ def tiku(result):
 
 
 menu = (
-    MenuItem(text="OCR(curl+Q)", action=click_menu, default=True, visible=True),
-    MenuItem(text="切换搜索源", action=click_menu, default=False, visible=True),
-    MenuItem(text="退出", action=on_exit),
+    MenuItem(text="举手", action=click_menu, default=False, visible=True),
+    MenuItem(text="联系老师", action=click_menu, default=False, visible=True),
+    MenuItem(text="关于", action=on_exit),
 )
 
 image = Image.open(f"{base_dir}\\OneClickQuery.ico")
-icon = pystray.Icon("name", image, "OneClickQuery", menu)
+icon = pystray.Icon("JYdianzijiaoshi", image, "极域学生管理系统", menu)
 subprocess.Popen([f"{base_dir}\\Ditto\\Ditto.exe"])
 print(f"当前搜索源为{searchEngine}")
 
