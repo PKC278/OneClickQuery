@@ -1,6 +1,5 @@
 from BaiduOCR import BaiduOCR
 from cut import Screenshot
-import pyperclip
 import os
 from pystray import MenuItem
 from PIL import Image
@@ -9,10 +8,11 @@ import threading
 import keyboard
 import sys
 import requests
-import subprocess
 import psutil
 from collections import Counter
+from show import TooltipListWidget
 
+final_data = []
 event = threading.Event()
 user_path = os.path.expanduser("~")
 searchEngine = "题库"
@@ -34,7 +34,7 @@ def click_menu(icon, item):
         else:
             searchEngine = "题库"
         print(f"已切换到{searchEngine}")
-        pyperclip.copy(f"已切换到{searchEngine}")
+        final_data.append(f"已切换到{searchEngine}")
 
 
 def on_exit(icon):
@@ -80,9 +80,9 @@ def main(icon):
         result = "程序错误，请重试"
     if result:
         print(result)
-        pyperclip.copy(result)
+        final_data.append(result)
     else:
-        pyperclip.copy("程序错误，请重试")
+        final_data.append("程序错误，请重试")
     image = Image.open(f"{base_dir}\\active.ico")
     icon.icon = image
 
@@ -96,6 +96,12 @@ def shot(event):
 def tary(event):
     icon.run()
     event.set()
+
+
+def show_listener(event):
+    while not event.is_set():
+        if keyboard.is_pressed("ctrl+`"):
+            TooltipListWidget.main(final_data)
 
 
 def chat(user_msg):
@@ -150,12 +156,14 @@ menu = (
 
 image = Image.open(f"{base_dir}\\OneClickQuery.ico")
 icon = pystray.Icon("JYdianzijiaoshi", image, "极域学生管理系统", menu)
-subprocess.Popen([f"{base_dir}\\Ditto\\Ditto.exe"])
 print(f"当前搜索源为{searchEngine}")
 
 t1 = threading.Thread(target=shot, args=(event,))
 t2 = threading.Thread(target=tary, args=(event,))
+t3 = threading.Thread(target=show_listener, args=(event,))
 t1.start()
 t2.start()
+t3.start()
 t1.join()
 t2.join()
+t3.join()
