@@ -8,7 +8,6 @@ import threading
 import keyboard
 import sys
 import requests
-import psutil
 from collections import Counter
 from show import TooltipListWidget
 
@@ -38,20 +37,6 @@ def click_menu(icon, item):
 
 
 def on_exit(icon):
-    try:
-        ditto_processes = []
-        for process in psutil.process_iter():
-            try:
-                proc_info = process.as_dict(attrs=["pid", "name"])
-                if proc_info["name"].lower() == "ditto.exe":
-                    ditto_processes.append(proc_info)
-            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-                pass
-        processes = ditto_processes
-        for proc in processes:
-            psutil.Process(proc["pid"]).terminate()
-    except:
-        pass
     icon.stop()
 
 
