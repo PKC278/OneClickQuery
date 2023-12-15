@@ -33,7 +33,7 @@ def click_menu(icon, item):
         else:
             searchEngine = "题库"
         print(f"已切换到{searchEngine}")
-        final_data.append(f"已切换到{searchEngine}")
+        final_data.insert(0, f"已切换到{searchEngine}")
 
 
 def on_exit(icon):
@@ -65,9 +65,9 @@ def main(icon):
         result = "程序错误，请重试"
     if result:
         print(result)
-        final_data.append(result)
+        final_data.insert(0, result)
     else:
-        final_data.append("程序错误，请重试")
+        final_data.insert(0, "程序错误，请重试")
     image = Image.open(f"{base_dir}\\active.ico")
     icon.icon = image
 
@@ -84,8 +84,12 @@ def tary(event):
 
 
 def show_listener(event):
+    global final_data
     while not event.is_set():
         if keyboard.is_pressed("ctrl+`"):
+            # 始终限制final_data最多5个元素
+            if len(final_data) > 5:
+                final_data = final_data[:5]
             TooltipListWidget.main(final_data)
 
 

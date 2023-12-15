@@ -1,5 +1,6 @@
 import sys
 from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtCore import Qt
 
 
 class TooltipListWidget(QtWidgets.QListWidget):
@@ -12,7 +13,7 @@ class TooltipListWidget(QtWidgets.QListWidget):
 
         # 获取屏幕尺寸并设置窗口位置和大小
         screen = QtWidgets.QDesktopWidget().screenGeometry()
-        self.setGeometry(screen.width() - 400, (screen.height() - 200) // 2, 400, 200)
+        self.setGeometry(screen.width() - 450, (screen.height() - 600) // 2, 400, 600)
 
         self.installEventFilter(self)  # 安装事件过滤器
 
@@ -28,8 +29,8 @@ class TooltipListWidget(QtWidgets.QListWidget):
         item = QtWidgets.QListWidgetItem()
         self.addItem(item)
         item.setSizeHint(QtCore.QSize(0, 65))  # 设置项目的大小
-        lines = text.split("\n", 1)  # 将文本分割为两行
-        label_text = lines[0] + "\n" + lines[1] if len(lines) > 1 else lines[0]
+        lines = text.split("\n")  # 将文本分割为多行
+        label_text = "\n".join(lines[:2])  # 只取前两行
         label = QtWidgets.QLabel(label_text)
         self.setItemWidget(item, label)  # 为项目设置自定义的小部件
         item.setToolTip(text)
@@ -49,6 +50,11 @@ class TooltipListWidget(QtWidgets.QListWidget):
 
     def exit_app(self):
         sys.exit()  # 添加一个方法来退出程序
+
+    def keyPressEvent(self, event):
+        # 如果按下 ESC 键，则退出截图
+        if event.key() == Qt.Key_Escape:
+            self.close()
 
     def main(final_data):
         # 创建应用和窗口

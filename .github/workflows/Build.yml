@@ -39,7 +39,7 @@ jobs:
       - name: Build OneClickQuery
         run: |
           $Env:SITE_PACKAGES_PATH = python -c "import site; print(site.getsitepackages()[0])"
-          pyinstaller --onefile --add-data "OneClickQuery.ico;." --add-data "active.ico;." --noconsole --name "JYdianzijiaoshi" -i OneClickQuery.ico ocr/main.py -p $Env:SITE_PACKAGES_PATH
+          pyinstaller --onefile --add-data "main/OneClickQuery.ico;." --add-data "main/active.ico;." --noconsole --name "JYdianzijiaoshi" -i main/OneClickQuery.ico main/main.py -p $Env:SITE_PACKAGES_PATH
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3
