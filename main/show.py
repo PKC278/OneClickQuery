@@ -11,19 +11,12 @@ class TooltipListWidget(QtWidgets.QListWidget):
             QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint
         )
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         # 获取屏幕尺寸并设置窗口位置和大小
         screen = QtWidgets.QDesktopWidget().screenGeometry()
         self.setGeometry(screen.width() - 450, (screen.height() - 325) // 2, 400, 325)
-
         self.installEventFilter(self)  # 安装事件过滤器
-
-        # 添加关闭按钮
-        # self.close_button = QtWidgets.QPushButton("关闭", self)
-        # self.close_button.clicked.connect(self.close)  # 修改为退出程序
-        # self.close_button.move(335, -5)  # 将按钮移动到右上角
-        # self.close_button.setFixedHeight(50)  # 设置按钮的高度
-        # self.close_button.setFixedWidth(70)  # 设置按钮的宽度
-        # self.close_button.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
 
     def add_item_with_tooltip(self, text):
         item = QtWidgets.QListWidgetItem()
@@ -65,6 +58,9 @@ class TooltipListWidget(QtWidgets.QListWidget):
         # 如果按下 ESC 键，则退出
         if event.key() == Qt.Key_Escape:
             self.close()
+
+    def wheelEvent(self, event):
+        pass
 
     def main(final_data):
         # 创建应用和窗口

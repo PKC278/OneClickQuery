@@ -73,9 +73,13 @@ def main(icon):
 
 
 def shot(event):
-    while not event.is_set():
-        if keyboard.is_pressed("ctrl+q"):
+    def on_hotkey():
+        if not event.is_set():
             main(icon)
+
+    keyboard.add_hotkey("ctrl+q", on_hotkey)
+    # 阻塞，直到 "ctrl+q" 组合键被按下
+    keyboard.wait("ctrl+q")
 
 
 def tary(event):
@@ -84,13 +88,16 @@ def tary(event):
 
 
 def show_listener(event):
-    global final_data
-    while not event.is_set():
+    def on_hotkey():
         if keyboard.is_pressed("ctrl+`"):
+            global final_data
             # 始终限制final_data最多5个元素
-            if len(final_data) > 5:
-                final_data = final_data[:5]
+            final_data = final_data[:5]
             TooltipListWidget.main(final_data)
+
+    keyboard.add_hotkey("ctrl+`", on_hotkey)
+    # 阻塞，直到 "ctrl+`" 组合键被按下
+    keyboard.wait("ctrl+`")
 
 
 def chat(user_msg):
