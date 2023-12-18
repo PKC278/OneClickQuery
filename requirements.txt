@@ -3,3 +3,4 @@ requests
 PyQt5
 pystray
 keyboard
+pyperclip

@@ -10,6 +10,7 @@ import sys
 import requests
 from collections import Counter
 from show import TooltipListWidget
+import pyperclip
 
 final_data = []
 event = threading.Event()
@@ -64,6 +65,7 @@ def main(icon):
     if result:
         print(result)
         final_data.insert(0, result)
+        pyperclip.copy(result)
     else:
         final_data.insert(0, "程序错误，请重试")
     image = Image.open(f"{base_dir}\\active.ico")
