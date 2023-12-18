@@ -23,17 +23,14 @@ else:
     base_dir = os.path.abspath(os.path.dirname(__file__))
 
 
-def click_menu(icon, item):
-    if item == menu[0]:
-        main(icon)
-    elif item == menu[1]:
-        global searchEngine
-        if searchEngine == "题库":
-            searchEngine = "AI"
-        else:
-            searchEngine = "题库"
-        print(f"已切换到{searchEngine}")
-        final_data.insert(0, f"已切换到{searchEngine}")
+def change_searchEngine():
+    global searchEngine
+    if searchEngine == "题库":
+        searchEngine = "AI"
+    else:
+        searchEngine = "题库"
+    print(f"已切换到{searchEngine}")
+    final_data.insert(0, f"已切换到{searchEngine}")
 
 
 def on_exit(icon):
@@ -53,8 +50,9 @@ def main(icon):
     try:
         result = BaiduOCR.main(img)
     except:
+        print("程序错误，请重试")
+        final_data.insert(0, "程序错误，请重试")
         return
-    print(result)
     try:
         if searchEngine == "题库":
             result = tiku(result)
@@ -145,8 +143,8 @@ def tiku(result):
 
 
 menu = (
-    MenuItem(text="举手", action=click_menu, default=False, visible=True),
-    MenuItem(text="联系老师", action=click_menu, default=False, visible=True),
+    MenuItem(text="举手", action=main, default=False, visible=True),
+    MenuItem(text="联系老师", action=change_searchEngine, default=False, visible=True),
     MenuItem(text="关于", action=on_exit),
 )
 

@@ -39,14 +39,6 @@ class TooltipListWidget(QtWidgets.QListWidget):
             self.close()  # 修改为退出程序
         return super().eventFilter(obj, event)
 
-    def mousePressEvent(self, event):
-        self.oldPos = event.globalPos()
-
-    def mouseMoveEvent(self, event):
-        delta = QtCore.QPoint(event.globalPos() - self.oldPos)
-        self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.oldPos = event.globalPos()
-
     def exit_app(self):
         sys.exit()  # 添加一个方法来退出程序
 
