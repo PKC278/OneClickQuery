@@ -102,7 +102,7 @@ def show_listener(event):
 
 def chat(user_msg):
     api_key = ""
-    url = "https://openai.api2d.net/v1/chat/completions"
+    url = "https://chat-api.pkcsublog.top/v1/chat/completions"
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
     data = {
         "model": "gpt-3.5-turbo",
