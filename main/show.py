@@ -14,8 +14,20 @@ class TooltipListWidget(QtWidgets.QListWidget):
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         # 获取屏幕尺寸并设置窗口位置和大小
+        global screen
         screen = QtWidgets.QDesktopWidget().screenGeometry()
-        self.setGeometry(screen.width() - 450, (screen.height() - 325) // 2, 400, 325)
+        width_ratio = 1 / 7
+        height_ratio = 1 / 4
+        width = screen.width() * width_ratio
+        global height
+        height = screen.height() * height_ratio
+        # 将窗口向左移动10%的屏幕宽度
+        self.setGeometry(
+            screen.width() - width - screen.width() * 0.01,
+            (screen.height() - height) // 2,
+            width,
+            height,
+        )
         self.installEventFilter(self)  # 安装事件过滤器
 
     def add_item_with_tooltip(self, text):
@@ -27,7 +39,7 @@ class TooltipListWidget(QtWidgets.QListWidget):
         else:
             item.setBackground(QBrush(QColor(255, 255, 255)))  # 白色
 
-        item.setSizeHint(QtCore.QSize(0, 65))  # 设置项目的大小
+        item.setSizeHint(QtCore.QSize(0, height / 5))  # 设置项目的大小
         lines = text.split("\n")  # 将文本分割为多行
         label_text = "\n".join(lines[:2])  # 只取前两行
         label = QtWidgets.QLabel(label_text)
@@ -76,7 +88,13 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = TooltipListWidget()
     # 示例数据
-    data = []
+    data = [
+        "测试1\n测试2",
+        "测试1\n测试2",
+        "测试1\n测试2",
+        "测试1\n测试2",
+        "测试1\n测试2",
+    ]
     # 添加数据到窗口
     for item in data:
         window.add_item_with_tooltip(item)
