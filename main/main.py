@@ -56,7 +56,7 @@ def main(icon):
         return
     try:
         if searchEngine == "题库":
-            result = tiku(result)
+            result, most_answer = tiku(result)
         else:
             user_msg = f"这里有一道题，请解答并只告诉我答案，不需要解释，这是题目:{result}"
             result = chat(user_msg)
@@ -65,7 +65,10 @@ def main(icon):
     if result:
         print(result)
         final_data.insert(0, result)
-        pyperclip.copy(result)
+        if searchEngine == "题库":
+            pyperclip.copy(most_answer)
+        elif searchEngine == "AI":
+            pyperclip.copy(result)
     else:
         final_data.insert(0, "程序错误，请重试")
     image = Image.open(f"{base_dir}\\active.ico")
@@ -138,10 +141,13 @@ def tiku(result):
         answers = ""
         for i in response:
             answers += f"{i[0]}\n"
-        display_text = f"{question}\n答案：{most_common_answer(response)}\n--------------------\n其他答案：{answers}"
+        most_answer = most_common_answer(response)
+        display_text = (
+            f"{question}\n答案：{most_answer}\n--------------------\n其他答案：{answers}"
+        )
     except:
         display_text = "程序错误，请重试"
-    return display_text
+    return display_text, most_answer
 
 
 menu = (
