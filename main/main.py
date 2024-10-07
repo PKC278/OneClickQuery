@@ -108,7 +108,7 @@ def chat(user_msg):
     url = "https://chat-api.pkcsublog.top/v1/chat/completions"
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
     data = {
-        "model": "gpt-3.5-turbo",
+        "model": "gpt-4o-mini",
         "messages": [{"role": "user", "content": user_msg}],
     }
     response = requests.post(url, headers=headers, json=data)
