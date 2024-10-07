@@ -43,7 +43,7 @@ jobs:
           pyinstaller --onefile --add-data "main/OneClickQuery.ico;." --add-data "main/active.ico;." --noconsole --name "JYdianzijiaoshi" -i main/OneClickQuery.ico main/main.py -p $Env:SITE_PACKAGES_PATH
 
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: OneClickQuery
           path: ./dist
